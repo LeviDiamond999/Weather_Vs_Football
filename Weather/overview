@@ -1,0 +1,11 @@
+The goal of this project is to create a relational database that stores weather reports in areas where NFL stadiums are and NFL statistics
+This file will contain how the weather info is stored and what we want our data to be structured
+
+Collecting weather data from selected coordinates
+* https://www.kaggle.com/datasets/logandonaldson/sports-stadium-locations?resource=download
+* filtering for NFL teams
+* adding data for international games played outside of USA https://en.wikipedia.org/wiki/List_of_NFL_games_played_outside_the_United_States
+* csvs downloaded from https://open-meteo.com/en/docs/historical-forecast-api?location_mode=csv_coordinates&bounding_box=52.27,13.16,52.77,13.66&start_date=2026-08-01&end_date=2026-10-17&hourly=temperature_2m,rain,precipitation,apparent_temperature,relative_humidity_2m,snowfall,showers,snow_depth,visibility,surface_pressure,wind_speed_10m&temperature_unit=fahrenheit&wind_speed_unit=mph&csv_coordinates=40.446667,-80.015833%0A36.090833,-115.183611%0A39.048889,-94.483889%0A32.747778,-97.092778%0A35.225833,-80.852778%0A29.950833,-90.081111%0A39.7439,-105.0201%0A30.323889,-81.6375%0A42.34,-83.045556%0A42.091,-71.264%0A25.958056,-80.238889%0A42.774,-78.787%0A41.506111,-81.699444%0A44.501389,-88.062222%0A37.403,-121.97%0A39.900833,-75.1675%0A39.760056,-86.163806%0A47.5952,-122.3316%0A39.278056,-76.622778%0A33.755556,-84.4%0A40.813528,-74.074361%0A36.166389,-86.771389%0A38.907778,-76.864444%0A39.095,-84.516%0A27.975833,-82.503333%0A29.684722,-95.410833%0A33.95345,-118.3392%0A41.8623,-87.6167%0A33.528,-112.263%0A44.974,-93.258%0A51.61876297,-0.1767151207%0A51.5560695,-0.2796034%0A48.2187901,11.6236227%0A19.3029794,-99.15047%0A-23.5453071,-46.474338%0A53.3603576,-6.2509812%0A52.5145846,13.2398144%0A40.4530437,-3.688197%0A-37.819909,144.983225
+* joining csvs with a python script
+
+
