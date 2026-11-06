@@ -71,6 +71,14 @@ ORDER BY Avg_EPA_Allowed ASC
 print(result)
 
 -- QB Performance
+roofs_excluded = ["closed", "dome", "outdoors", "open"]
+t_1, t_2 = -30, 32       # temperature (°F)
+p_1, p_2 = 0, 200        # rain (mm)
+s_1, s_2 = 0, 6          # snowfall (cm)
+h_1, h_2 = 0, 100        # humidity (%)
+w_1, w_2 = 0, 50         # wind (mph)
+y_1, y_2 = 2022, 2026    # seasons
+      
 WITH qb_plays AS (
   SELECT *,
     CASE WHEN passer IS NOT NULL THEN passer
@@ -105,7 +113,7 @@ HAVING COUNT(*) >= 50
 ORDER BY Avg_EPA DESC
 
 -- Rushing Performance
-roofs_excluded = ["closed", "dome"]
+roofs_excluded = ["closed", "dome", "outdoors", "open"]
 t_1, t_2 = -30, 32       # temperature (°F)
 p_1, p_2 = 0, 200        # rain (mm)
 s_1, s_2 = 0, 6          # snowfall (cm)
@@ -144,7 +152,7 @@ ORDER BY Avg_EPA DESC
 print(result)
 
 -- Receiving Performance
-roofs_excluded = ["closed", "dome"]
+roofs_excluded = ["closed", "dome", "outdoors", "open"]
 t_1, t_2 = -30, 32       # temperature (°F)
 p_1, p_2 = 0, 200        # rain (mm)
 s_1, s_2 = 0, 6          # snowfall (cm)
