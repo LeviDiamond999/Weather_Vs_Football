@@ -47,7 +47,7 @@ AND (w."snowfall (cm)" BETWEEN s_1 AND s_2)
 AND (w."relative_humidity_2m (%)" BETWEEN h_1 AND h_2)
 AND (w."wind_speed_10m (mp/h)" BETWEEN w_1 AND w_2)
 AND (p.season BETWEEN y_1 AND y_2)
-AND p.kick_distance IS NULL 
+AND (p.play_type IN ('run','pass'))  
 GROUP BY Defense
 ORDER BY Avg_EPA_Allowed ASC
 
@@ -64,7 +64,7 @@ AND (w."snowfall (cm)" BETWEEN 0 AND 6)
 AND (w."relative_humidity_2m (%)" BETWEEN 0 AND 110)
 AND (w."wind_speed_10m (mp/h)" BETWEEN 0 AND 50)
 AND (p.season BETWEEN 2022 AND 2026)
-AND p.kick_distance IS NULL 
+AND (p.play_type IN ('run','pass'))  
 GROUP BY Defense
 ORDER BY Avg_EPA_Allowed ASC
 """, eager=True)
