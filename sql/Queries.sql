@@ -1,74 +1,67 @@
--- Offense 
-SELECT posteam AS Offense, AVG(epa) AS Avg_EPA, COUNT(DISTINCT(game_id)) AS Games
-FROM pbp p
-JOIN weather w
-      ON p.location_id = w.location_id
-      AND p.time_of_day_rounded = w.time_of_day_rounded
-WHERE p.roof NOT IN (r)
-AND (w."temperature_2m (°F)" BETWEEN t_1 AND t_2)
-AND (w."rain (mm)" BETWEEN p_1 AND p_2)
-AND (w."snowfall (cm)" BETWEEN s_1 AND s_2)
-AND (w."relative_humidity_2m (%)" BETWEEN h_1 AND h_2)
-AND (w."wind_speed_10m (mp/h)" BETWEEN w_1 AND w_2)
-AND (p.season BETWEEN y_1 AND y_2)
-AND (p.play_type IN ('run','pass'))  
-GROUP BY Offense
-ORDER BY Avg_EPA DESC
+-- Offense totals page
+indoor_temp = 70
 
-result = pl.SQLContext( weather=weather, pbp=pbp).execute("""
-    SELECT posteam AS Offense, AVG(epa) AS Avg_EPA, COUNT(DISTINCT(game_id)) AS Games
-FROM pbp p
-JOIN weather w
-      ON p.location_id = w.location_id
-      AND p.time_of_day_rounded = w.time_of_day_rounded
-WHERE p.roof NOT IN ('closed', 'dome')
-AND (w."temperature_2m (°F)" BETWEEN -30 AND 32)
-AND (w."rain (mm)" BETWEEN 0 AND 200)
-AND (w."snowfall (cm)" BETWEEN 0 AND 6)
-AND (w."relative_humidity_2m (%)" BETWEEN 0 AND 110)
-AND (w."wind_speed_10m (mp/h)" BETWEEN 0 AND 50)
-AND (p.season BETWEEN 2022 AND 2026)
-AND (p.play_type IN ('run','pass'))                                                           
+result = pl.SQLContext(pbp=pbp, weather=weather).execute(f"""
+WITH plays AS (
+  SELECT p.*,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN {indoor_temp}
+         ELSE w."temperature_2m (°F)" END AS game_temp,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."wind_speed_10m (mp/h)" END AS game_wind,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."rain (mm)" END AS game_rain,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."snowfall (cm)" END AS game_snow
+  FROM pbp p
+  JOIN weather w
+    ON p.location_id = w.location_id
+   AND p.time_of_day_rounded = w.time_of_day_rounded
+)
+SELECT posteam AS Offense, AVG(epa) AS Avg_EPA, COUNT(DISTINCT game_id) AS Games
+FROM plays
+WHERE game_temp BETWEEN -32 AND 120
+  AND game_wind BETWEEN 0 AND 50
+  AND game_rain BETWEEN 0 AND 200
+  AND game_snow BETWEEN 0 AND 6
+  AND season BETWEEN 2022 AND 2026
+  AND play_type IN ('run', 'pass')
 GROUP BY Offense
 ORDER BY Avg_EPA DESC
 """, eager=True)
 print(result)
 
--- Defense
-SELECT defteam AS Defense, AVG(epa) AS Avg_EPA_Allowed, COUNT(DISTINCT(game_id)) AS Games
-FROM pbp p
-JOIN weather w
-      ON p.location_id = w.location_id
-      AND p.time_of_day_rounded = w.time_of_day_rounded
-WHERE p.roof NOT IN (r)
-AND (w."temperature_2m (°F)" BETWEEN t_1 AND t_2)
-AND (w."rain (mm)" BETWEEN p_1 AND p_2)
-AND (w."snowfall (cm)" BETWEEN s_1 AND s_2)
-AND (w."relative_humidity_2m (%)" BETWEEN h_1 AND h_2)
-AND (w."wind_speed_10m (mp/h)" BETWEEN w_1 AND w_2)
-AND (p.season BETWEEN y_1 AND y_2)
-AND (p.play_type IN ('run','pass'))  
-GROUP BY Defense
-ORDER BY Avg_EPA_Allowed ASC
+-- Defense totals page
+indoor_temp = 70
 
-result = pl.SQLContext( weather=weather, pbp=pbp).execute("""
-    SELECT defteam AS Defense, AVG(epa) AS Avg_EPA_Allowed, COUNT(DISTINCT(game_id)) AS Games
-FROM pbp p
-JOIN weather w
-      ON p.location_id = w.location_id
-      AND p.time_of_day_rounded = w.time_of_day_rounded
-WHERE p.roof NOT IN ('closed', 'dome')
-AND (w."temperature_2m (°F)" BETWEEN -30 AND 32)
-AND (w."rain (mm)" BETWEEN 0 AND 200)
-AND (w."snowfall (cm)" BETWEEN 0 AND 6)
-AND (w."relative_humidity_2m (%)" BETWEEN 0 AND 110)
-AND (w."wind_speed_10m (mp/h)" BETWEEN 0 AND 50)
-AND (p.season BETWEEN 2022 AND 2026)
-AND (p.play_type IN ('run','pass'))  
+result = pl.SQLContext(pbp=pbp, weather=weather).execute(f"""
+WITH plays AS (
+  SELECT p.*,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN {indoor_temp}
+         ELSE w."temperature_2m (°F)" END AS game_temp,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."wind_speed_10m (mp/h)" END AS game_wind,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."rain (mm)" END AS game_rain,
+    CASE WHEN p.roof IN ('dome', 'closed') THEN 0
+         ELSE w."snowfall (cm)" END AS game_snow
+  FROM pbp p
+  JOIN weather w
+    ON p.location_id = w.location_id
+   AND p.time_of_day_rounded = w.time_of_day_rounded
+)
+SELECT defteam AS Defense, AVG(epa) AS Avg_EPA_Allowed, COUNT(DISTINCT game_id) AS Games
+FROM plays
+WHERE game_temp BETWEEN -32 AND 120
+  AND game_wind BETWEEN 0 AND 50
+  AND game_rain BETWEEN 0 AND 200
+  AND game_snow BETWEEN 0 AND 6
+  AND season BETWEEN 2022 AND 2026
+  AND play_type IN ('run', 'pass')
 GROUP BY Defense
 ORDER BY Avg_EPA_Allowed ASC
 """, eager=True)
 print(result)
+
 
 -- QB Performance
 roofs_excluded = ["closed", "dome", "outdoors", "open"]
